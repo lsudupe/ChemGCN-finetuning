@@ -108,7 +108,7 @@ class GraphData(Dataset):
                  dataset_path: str,
                  node_vec_len: int,
                  max_atoms: int,
-                 property_name: str):
+                 property_name: list):   ## multiple
         """
         GraphData class inheriting from the Dataset class in PyTorch.
 
