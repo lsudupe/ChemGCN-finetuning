@@ -134,7 +134,8 @@ class GraphData(Dataset):
         # Create lists
         self.indices = df.index.to_list()
         self.smiles = df["smiles"].to_list()
-        self.outputs = df[property_name].to_list()
+        self.outputs = df[property_name].values.to_list()  ## change to use multiple properties
+        self.property_names = property_name ## save property names
 
     def __len__(self):
         """
@@ -179,7 +180,7 @@ class GraphData(Dataset):
         adj_mat = torch.Tensor(mol.adj_mat)
 
         # Get output
-        output = torch.Tensor([self.outputs[i]])
+        output = torch.Tensor(self.outputs[i]) ## cchange to manage multiple properties
 
         return (node_mat, adj_mat), output, smile
 
@@ -259,5 +260,5 @@ if __name__ == "__main__":
     filepath = os.path.abspath(__file__)
     main_dirpath = os.path.dirname(os.path.dirname(filepath))
     dataset_path = os.path.join(main_dirpath + "/data/solubility_data.csv")
-    data = GraphData(dataset_path, 10, 75)
+    data = GraphData(dataset_path, 10, 75, ["carbon_number", "solubility"]) ## change to use multiple properties
     print(torch.diag(data[0][0][1].sum(dim=-1)))
