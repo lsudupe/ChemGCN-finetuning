@@ -108,7 +108,7 @@ class GraphData(Dataset):
                  dataset_path: str,
                  node_vec_len: int,
                  max_atoms: int,
-                 property_name: list):   ## multiple
+                 property_names: list):   ## multiple
         """
         GraphData class inheriting from the Dataset class in PyTorch.
 
@@ -134,8 +134,8 @@ class GraphData(Dataset):
         # Create lists
         self.indices = df.index.to_list()
         self.smiles = df["smiles"].to_list()
-        self.outputs = df[property_name].values.to_list()  ## change to use multiple properties
-        self.property_names = property_name ## save property names
+        self.outputs = df[property_names].values.tolist()  ## change to use multiple properties
+        self.property_names = property_names ## save property names
 
     def __len__(self):
         """
@@ -180,7 +180,7 @@ class GraphData(Dataset):
         adj_mat = torch.Tensor(mol.adj_mat)
 
         # Get output
-        output = torch.Tensor(self.outputs[i]) ## cchange to manage multiple properties
+        output = {prop: torch.Tensor([self.outputs[i][j]]) for j, prop in enumerate(self.property_names)} ## cchange to manage multiple properties
 
         return (node_mat, adj_mat), output, smile
 
